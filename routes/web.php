@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisteredProductController;
@@ -15,7 +16,8 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->middleware('auth');
-Route::get('/products', [ProductController::class,'index'])->name('product');
+Route::get('/products', [ProductController::class, 'index'])->name('product');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -27,4 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+require __DIR__ . '/category.php';

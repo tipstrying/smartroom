@@ -13,15 +13,15 @@ defineProps<{
 const form = useForm({
     name: '',
     pcode: '',
-    image:'',
-    type:'',
-    unit:'',
+    image: '',
+    type: '',
+    unit: '',
 });
 
 const submit = () => {
     form.post(route('register'), {
         onFinish: () => {
-            
+
         },
     });
 };
@@ -30,7 +30,7 @@ const submit = () => {
 <template>
     <GuestLayout>
 
-        <Head title="新增商品" />
+        <Head title="新增商品"></Head>
 
         <form @submit.prevent="submit">
             <div>
@@ -54,20 +54,13 @@ const submit = () => {
             <div class="mt-4">
                 <InputLabel for="password" value="商品规格" />
 
-                <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.type" required
+                <TextInput id="password" type="text" class="mt-1 block w-full" v-model="form.type" required
                     autocomplete="new-password" />
 
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-2" :message="form.errors.type" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="确认密码" />
 
-                <TextInput id="password_confirmation" type="password" class="mt-1 block w-full"
-                    v-model="form.password_confirmation" required autocomplete="new-password" />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
 
             <div class="flex items-center justify-end mt-4">
                 <Link :href="route('login')"
