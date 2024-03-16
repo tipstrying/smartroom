@@ -9,7 +9,21 @@ class Category extends Model
 {
     use HasFactory;
     protected $fillable = [
-        "name",
-        "code",
+        'name',
+        'level',
+        'ccode',
+        'fcode',
     ];
+    public function getRouteKeyName(): string
+    {
+        return 'ccode';
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
 }

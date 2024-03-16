@@ -17,6 +17,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+        
         return inertia::render("Category/Index", ["data" => $categories]);
         //
     }
@@ -26,19 +27,22 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return Inertia::render("Category/Register");
+        $categories = Category::where('level', '<', 2)->orderByDesc('ccode')->get();
+        $ccode = strval( intval( Category::where('ccode', '!=', '')->orderByDesc('ccode')->first()->only('ccode')['ccode']) + 1);
+        
+        return Inertia::render("Category/Register", ["categories" => $categories, "nextcode"=>$ccode]);
         //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCategoryRequest $request): RedirectResponse | Response
+    public function store(StoreCategoryRequest $request): RedirectResponse|Response
     {
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'code' => 'required|string|max:255|unique',
+                'ccode' => 'required|string|max:255|unique:categories',
             ]);
         } catch (\Exception $e) {
             return inertia::render("Category/RegisterError", ["error" => "参数校验失败:" . $e->getMessage() . $e->getTraceAsString()]);
@@ -46,7 +50,9 @@ class CategoryController extends Controller
         try {
             Category::create([
                 "name" => $request->name,
-                "code" => $request->code,
+                "ccode" => $request->ccode,
+                "fcode"=> $request->fcode,
+                "level"=> $request->level,
             ]);
         } catch (\Exception $e) {
             return inertia::render("Category/RegisterError", ["error" => "数据库操作失败:" . $e->getMessage() . $e->getTraceAsString()]);
@@ -61,7 +67,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category = Category::where('code', $category->code)->get();
+        $category = Category::where('ccode', $category->ccode)->get();
         return inertia::render(
             'Category/Index',
             ["data" => $category]

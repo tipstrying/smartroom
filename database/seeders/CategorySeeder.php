@@ -14,6 +14,12 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         //
-        Category::factory()->count(10)->create();
+       // Category::factory()->count(10)->create();
+       Category::create([
+        "name"=> "全部",
+        'ccode'=>"1000",
+        'fcode'=>'1000',
+        'level'=> 0,
+       ]);
     }
 }

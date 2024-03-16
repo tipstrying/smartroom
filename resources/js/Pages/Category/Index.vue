@@ -3,22 +3,22 @@ import { useForm } from '@inertiajs/vue3';
 
 defineProps<{
     'data': Array<{
-        "name": string,
-        "code": string,
+        'name': string,
+        'ccode': string,
     }>
 }>();
+
 const formData = useForm({
     'name': ""
 })
-formData.delete(route(''), {
-    onFinish: () => { }
-})
+
+
 </script>
 <template>
     <ul>
-        <li v-for="c in data" :key="c.code">
+        <li v-for="c in data" :key="c.ccode">
             <div style="display: flex;">
-                <div> {{ c.name }} : {{ c.code }}</div>
+                <div> {{ c.name }} : {{ c.ccode }}</div>
                 <div><button>edit</button></div>
                 <div><button>delete</button></div>
             </div>

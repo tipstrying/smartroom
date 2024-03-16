@@ -16,7 +16,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->middleware('auth');
-Route::get('/products', [ProductController::class, 'index'])->name('product');
 
 
 Route::get('/dashboard', function () {
@@ -32,3 +31,4 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 require __DIR__ . '/category.php';
+require __DIR__ .'/product.php';

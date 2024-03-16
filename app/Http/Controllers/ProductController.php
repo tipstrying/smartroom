@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\product;
 use App\Http\Requests\StoreproductRequest;
 use App\Http\Requests\UpdateproductRequest;
@@ -15,11 +16,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = product::all();
         $products_head = ProductHeads::all();
-        error_log($products_head);
+        $products = product::all();
         return inertia::render("Products/products", ["data" => $products, "head" => $products_head]);
-        //
+    }
+    public function get(product $product)
+    {
+        $products_head = ProductHeads::all();
+        return inertia::render("Products/products", ["data" => [$product], "head" => $products_head]);
+    }
+    public function getByCategory(Category $category)
+    {
+        $products_head = ProductHeads::all();
+        $products = Product::where("ccode", $category->only("ccode"))->get();
+        return inertia::render("Products/products", ["data" => $products, "head" => $products_head]);
     }
 
     /**
@@ -27,6 +37,8 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $categories = Category::all();
+        return inertia::render('Products/Create', ['categories' => $categories]);
         //
     }
 
@@ -35,6 +47,24 @@ class ProductController extends Controller
      */
     public function store(StoreproductRequest $request)
     {
+        try {
+            $request->validate(
+                [
+                    'name' => 'required|string|max:255',
+                    'pcode' => 'required|string|max:255|unique:products',
+                    'ccode' => 'required|string|max:255|exists:categories',
+                ]
+            );
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+        try {
+            product::create($request->all());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+
         //
     }
 
