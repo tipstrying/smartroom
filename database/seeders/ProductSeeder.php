@@ -13,7 +13,7 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        product::factory()->count(10)->create();
+        // product::factory()->count(10)->create();
 
         ProductHeads::factory()->state(['key' => 'name', 'title' => '商品名称'])->create();
         ProductHeads::factory()->state(['key' => 'pcode', 'title' => '商品编码'])->create();

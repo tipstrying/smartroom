@@ -16,9 +16,25 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        
-        return inertia::render("Category/Index", ["data" => $categories]);
+        $root = [];
+        $c_root = Category::where("level", 0)->get();
+        $root['data'] = $c_root->first();
+        $root['child'] = [];
+        $c_1 = Category::where("level", 1)->get();
+
+        if ($c_1->count() > 0) {
+
+            foreach ($c_1 as $c) {
+                $tmp = [];
+                $tmp['data'] = $c;
+
+
+                $c_tmp = Category::where("level", 2)->where('fcode', $c->ccode)->get();
+                $tmp['child'] = $c_tmp;
+                array_push($root['child'], $tmp);
+            }
+        }
+        return inertia::render("Category/Index", ["data" => $root]);
         //
     }
 
@@ -28,9 +44,11 @@ class CategoryController extends Controller
     public function create()
     {
         $categories = Category::where('level', '<', 2)->orderByDesc('ccode')->get();
-        $ccode = strval( intval( Category::where('ccode', '!=', '')->orderByDesc('ccode')->first()->only('ccode')['ccode']) + 1);
-        
-        return Inertia::render("Category/Register", ["categories" => $categories, "nextcode"=>$ccode]);
+        $ccode = '1000';
+        if (count($categories) > 0) {
+            $ccode = strval(intval(Category::where('ccode', '!=', '')->orderByDesc('ccode')->first()->only('ccode')['ccode']) + 1);
+        }
+        return Inertia::render("Category/Register", ["categories" => $categories, "nextcode" => $ccode]);
         //
     }
 
@@ -51,8 +69,8 @@ class CategoryController extends Controller
             Category::create([
                 "name" => $request->name,
                 "ccode" => $request->ccode,
-                "fcode"=> $request->fcode,
-                "level"=> $request->level,
+                "fcode" => $request->fcode,
+                "level" => $request->level,
             ]);
         } catch (\Exception $e) {
             return inertia::render("Category/RegisterError", ["error" => "数据库操作失败:" . $e->getMessage() . $e->getTraceAsString()]);

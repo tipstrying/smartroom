@@ -18,7 +18,25 @@ class ProductController extends Controller
     {
         $products_head = ProductHeads::all();
         $products = product::all();
-        return inertia::render("Products/products", ["data" => $products, "head" => $products_head]);
+        $root = [];
+        $c_root = Category::where("level", 0)->get();
+        $root['data'] = $c_root->first();
+        $root['child'] = [];
+        $c_1 = Category::where("level", 1)->get();
+
+        if ($c_1->count() > 0) {
+
+            foreach ($c_1 as $c) {
+                $tmp = [];
+                $tmp['data'] = $c;
+
+
+                $c_tmp = Category::where("level", 2)->where('fcode', $c->ccode)->get();
+                $tmp['child'] = $c_tmp;
+                array_push($root['child'], $tmp);
+            }
+        }
+        return inertia::render("Products/products", ["data" => $products, "head" => $products_head, "category"=>$root]);
     }
     public function get(product $product)
     {
@@ -27,9 +45,28 @@ class ProductController extends Controller
     }
     public function getByCategory(Category $category)
     {
+        $root = [];
+        $c_root = Category::where("level", 0)->get();
+        $root['data'] = $c_root->first();
+        $root['child'] = [];
+        $c_1 = Category::where("level", 1)->get();
+
+        if ($c_1->count() > 0) {
+
+            foreach ($c_1 as $c) {
+                $tmp = [];
+                $tmp['data'] = $c;
+
+
+                $c_tmp = Category::where("level", 2)->where('fcode', $c->ccode)->get();
+                $tmp['child'] = $c_tmp;
+                array_push($root['child'], $tmp);
+            }
+        }
+
         $products_head = ProductHeads::all();
         $products = Product::where("ccode", $category->only("ccode"))->get();
-        return inertia::render("Products/products", ["data" => $products, "head" => $products_head]);
+        return inertia::render("Products/products", ["data" => $products, "head" => $products_head, 'category'=>$root]);
     }
 
     /**

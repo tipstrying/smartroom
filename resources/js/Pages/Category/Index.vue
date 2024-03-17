@@ -1,28 +1,56 @@
 <script lang="ts" setup>
 import { useForm } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
-defineProps<{
-    'data': Array<{
-        'name': string,
-        'ccode': string,
-    }>
+const p = defineProps<{
+    'data': {
+        data: {
+            name: string,
+            ccode: string,
+        },
+        child: [
+            {
+                data: {
+                    name: string,
+                    ccode: string,
+                }
+                child: [{
+
+                    name: string,
+                    ccode: string,
+
+                }]
+            }
+        ]
+    }
 }>();
 
 const formData = useForm({
     'name': ""
 })
 
+onMounted(() => {
+    console.log(p.data)
+})
 
 </script>
 <template>
     <ul>
-        <li v-for="c in data" :key="c.ccode">
-            <div style="display: flex;">
-                <div> {{ c.name }} : {{ c.ccode }}</div>
-                <div><button>edit</button></div>
-                <div><button>delete</button></div>
-            </div>
+        <li><span>{{ data.data.name }}</span>
+            <ul v-for="u in data.child" style="padding-left: 12px;">
+                <li>
+                    <span>{{ u.data.name }}</span>
+                    <ul style="padding-left: 12px;">
+                        <li v-for="uu in u.child">
 
+                            <span>{{ uu.name }}</span>
+
+                        </li>
+                    </ul>
+
+                </li>
+            </ul>
         </li>
+
     </ul>
 </template>
