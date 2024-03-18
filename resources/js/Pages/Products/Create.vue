@@ -5,12 +5,22 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     categories: [{
         name: string,
         ccode: string,
-    }]
+    }],
+    product: {
+        name: '',
+        pcode: '',
+        image: '',
+        type: '',
+        unit: '',
+        ccode: '',
+        brand: "",
+    } | undefined,
 }>();
 
 const form = useForm({
@@ -33,6 +43,32 @@ const submit = () => {
 function showForm() {
     console.log(form);
 }
+
+onMounted(() => {
+    if (props.product ) {
+        if (props.product.name) {
+            form.name = props.product.name
+        }
+        if (props.product.ccode) {
+            form.ccode = props.product.ccode
+        }
+        if (props.product.brand) {
+            form.brand = props.product.brand
+        }
+        if (props.product.image) {
+            form.brand = props.product.image
+        }
+        if (props.product.pcode) {
+            form.pcode = props.product.pcode
+        }
+        if (props.product.type) {
+            form.type = props.product.type
+        }
+        if (props.product.unit) {
+            form.unit = props.product.unit
+        }
+    }
+})
 </script>
 
 <template>
@@ -45,7 +81,7 @@ function showForm() {
                 <InputLabel for="name" value="商品名称" />
 
                 <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus
-                    autocomplete="name" />
+                    autocomplete="name"  />
 
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
@@ -96,7 +132,13 @@ function showForm() {
 
             <div class="flex items-center justify-end mt-4">
 
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <PrimaryButton v-if="product" class="ms-4" :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing">
+                    修改
+                </PrimaryButton>
+
+                <PrimaryButton v-else class="ms-4" :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing">
                     新增
                 </PrimaryButton>
             </div>

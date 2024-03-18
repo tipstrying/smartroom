@@ -13,6 +13,8 @@ class StockController extends Controller
      */
     public function index()
     {
+        $stock = stock::all();
+        
         //
     }
 

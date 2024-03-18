@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\product;
+use App\Models\Product;
 use App\Http\Requests\StoreproductRequest;
 use App\Http\Requests\UpdateproductRequest;
 use App\Models\ProductHeads;
@@ -17,7 +17,7 @@ class ProductController extends Controller
     public function index()
     {
         $products_head = ProductHeads::all();
-        $products = product::all();
+        $products = Product::all();
         $root = [];
         $c_root = Category::where("level", 0)->get();
         $root['data'] = $c_root->first();
@@ -38,7 +38,7 @@ class ProductController extends Controller
         }
         return inertia::render("Products/products", ["data" => $products, "head" => $products_head, "category"=>$root]);
     }
-    public function get(product $product)
+    public function get(Product $product)
     {
         $products_head = ProductHeads::all();
         return inertia::render("Products/products", ["data" => [$product], "head" => $products_head]);
@@ -75,7 +75,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return inertia::render('Products/Create', ['categories' => $categories]);
+        return inertia::render('Products/Create', ['categories' => $categories, 'product'=> null]);
         //
     }
 
@@ -96,11 +96,11 @@ class ProductController extends Controller
             return $e->getMessage();
         }
         try {
-            product::create($request->all());
+            Product::create($request->all());
         } catch (\Exception $e) {
             return $e->getMessage();
         }
-
+        return redirect()->route('product');
 
         //
     }
@@ -108,7 +108,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(product $product)
+    public function show(Product $product)
     {
         //
     }
@@ -116,24 +116,30 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(product $product)
+    public function edit(Product $product)
     {
+        $categories = Category::where('level',2)->get();
+        return inertia::render('Products/Create', ['categories' => $categories, 'product'=> $product]);
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateproductRequest $request, product $product)
+    public function update(UpdateproductRequest $request, Product $product)
     {
+        $product->save($request->all());
+        return redirect('/product');
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(product $product)
+    public function destroy(Product $product)
     {
+        $p = Product::where('pcode', $product->pcode)->delete();
+        return redirect('/product');
         //
     }
 }

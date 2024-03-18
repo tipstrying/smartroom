@@ -3,6 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 
 import CategoriesTree from '@/Components/CategoriesTree.vue';
+import MainPage from '@/Layouts/MainPage.vue';
 
 type dataType = {
     "name": string,
@@ -34,24 +35,34 @@ const formData = useForm({
 function add() {
     axios.get(route('product.create'))
 }
+
+function edit(code: string) {
+
+    axios.get(route('product.edit', code))
+}
 </script>
 <template>
-    <div style="display: flex;">
-        <div>
+
+    <main-page>
+        <template v-slot:bar>
             <categories-tree :data="category"></categories-tree>
-        </div>
-        <div>
+        </template>
+        <template v-slot:table>
             <table>
                 <tr>
                     <th v-for="h in head" :key="h.title + 'head'">{{ h.title }}</th>
+                    <th>操作</th>
                 </tr>
                 <tr v-for="d in data">
                     <td v-for="h in head" :key="d[h.key] + 'ddd'">{{ d[h.key] }}</td>
+                    <td>
+                        <a :href="route('product.edit', d.pcode)">修改</a>
+                        <a :href="route('product.delete', d.pcode)">删除</a>
+                        
+                    </td>
                 </tr>
             </table>
-        </div>
-    </div>
-
-
+        </template>
+    </main-page>
 
 </template>

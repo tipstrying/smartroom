@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Rooms;
 use App\Models\User;
-use App\Models\Product;
 use Illuminate\Auth\Access\Response;
 
-class ProductPolicy
+class RoomsPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class ProductPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Product $product): bool
+    public function view(User $user, Rooms $rooms): bool
     {
         //
     }
@@ -35,7 +35,7 @@ class ProductPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Product $product): bool
+    public function update(User $user, Rooms $rooms): bool
     {
         //
     }
@@ -43,7 +43,7 @@ class ProductPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Product $product): bool
+    public function delete(User $user, Rooms $rooms): bool
     {
         //
     }
@@ -51,7 +51,7 @@ class ProductPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Product $product): bool
+    public function restore(User $user, Rooms $rooms): bool
     {
         //
     }
@@ -59,7 +59,7 @@ class ProductPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Product $product): bool
+    public function forceDelete(User $user, Rooms $rooms): bool
     {
         //
     }
